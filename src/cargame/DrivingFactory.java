@@ -33,15 +33,6 @@ public class DrivingFactory implements EntityFactory {
                 .build();
     }
 
-    @Spawns("background")
-    public Entity newBackground(SpawnData data) {
-        return entityBuilder()
-                .view(new ScrollingBackgroundView(texture("background.png")))
-                .zIndex(-1)
-                .with(new IrremovableComponent())
-                .build();
-    }
-
     @Spawns("moose")
     public Entity spawnMoose(SpawnData data) {
        return entityBuilder()
@@ -50,7 +41,7 @@ public class DrivingFactory implements EntityFactory {
                 .viewWithBBox(new Rectangle(20, 80, Color.BLACK))
                 .collidable()
                 .with(new OffscreenCleanComponent())
-                .with(new LiftComponent().yAxisSpeedDuration(150, Duration.seconds(1)))
+                .with(new LiftComponent().yAxisSpeedDuration(150, Duration.seconds(15)))
                 .build();
     }
 }
