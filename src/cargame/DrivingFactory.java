@@ -38,8 +38,8 @@ public class DrivingFactory implements EntityFactory {
        return entityBuilder()
                 .from(data)
                 .type(MOOSE)
-                .viewWithBBox(new Rectangle(20, 80, Color.BLACK))
-                .collidable()
+                .viewWithBBox(texture("moose.png", 40, 58))
+                .with(new CollidableComponent(true))
                 .with(new OffscreenCleanComponent())
                 .with(new LiftComponent().yAxisSpeedDuration(150, Duration.seconds(15)))
                 .build();

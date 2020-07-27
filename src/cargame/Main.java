@@ -69,7 +69,7 @@ public class Main extends GameApplication {
 
         getGameScene().getViewport().setBounds(0, -Integer.MAX_VALUE, getAppWidth(), Integer.MAX_VALUE);
         getGameScene().getViewport().bindToEntity(car, getAppWidth() / 3, getAppHeight() / 2);
-        getGameTimer().runAtInterval(() -> spawn("moose", car.getRightX(), car.getBottomY() - 500) , Duration.seconds(3));
+        getGameTimer().runAtInterval(() -> spawn("moose", car.getRightX(), car.getBottomY() - 480) , Duration.seconds(3));
 
     }
 
@@ -86,6 +86,7 @@ public class Main extends GameApplication {
         onCollisionBegin(CAR, MOOSE, (car, moose) -> {
             moose.removeFromWorld();
             showMessage("You Died!");
+            set("score", 0);
         });
     }
 
