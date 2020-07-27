@@ -36,6 +36,7 @@ public class Main extends GameApplication {
         onKey(KeyCode.S, () -> car.translateY(10));
         onKey(KeyCode.A, () -> car.translateX(-10));
         onKey(KeyCode.D, () -> car.translateX(10));
+        onBtnDown(MouseButton.PRIMARY, () -> spawn("moose", 200, 200));
     }
 
 
@@ -55,6 +56,14 @@ public class Main extends GameApplication {
 
     private void initScreenBounds() {
         entityBuilder().buildScreenBoundsAndAttach(100);
+    }
+
+    @Override
+    protected void initPhysics() {
+        onCollisionBegin(CAR, MOOSE, (car, moose) -> {
+            moose.removeFromWorld();
+            showMessage("You Died!");
+        });
     }
 
     public static void main(String[] args) {

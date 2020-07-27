@@ -3,6 +3,8 @@ package cargame;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent;
 import com.almasb.fxgl.dsl.components.LiftComponent;
+import com.almasb.fxgl.dsl.components.OffscreenCleanComponent;
+import com.almasb.fxgl.dsl.components.ProjectileComponent;
 import com.almasb.fxgl.dsl.views.ScrollingBackgroundView;
 import com.almasb.fxgl.entity.*;
 import com.almasb.fxgl.entity.components.CollidableComponent;
@@ -37,6 +39,18 @@ public class DrivingFactory implements EntityFactory {
                 .view(new ScrollingBackgroundView(texture("background.png")))
                 .zIndex(-1)
                 .with(new IrremovableComponent())
+                .build();
+    }
+
+    @Spawns("moose")
+    public Entity spawnMoose(SpawnData data) {
+       return entityBuilder()
+                .from(data)
+                .type(MOOSE)
+                .viewWithBBox(new Rectangle(20, 80, Color.BLACK))
+                .collidable()
+                .with(new OffscreenCleanComponent())
+                .with(new LiftComponent().yAxisSpeedDuration(150, Duration.seconds(1)))
                 .build();
     }
 }
