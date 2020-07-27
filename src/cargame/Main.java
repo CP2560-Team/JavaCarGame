@@ -2,17 +2,12 @@ package cargame;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
-import cargame.EntityType;
 import static cargame.EntityType.*;
 import static com.almasb.fxgl.dsl.FXGL.*;
-import com.almasb.fxgl.app.GameApplication;
-import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.views.ScrollingBackgroundView;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
-import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.Texture;
-import javafx.geometry.HorizontalDirection;
 import javafx.geometry.Orientation;
 import javafx.geometry.VerticalDirection;
 import javafx.scene.input.KeyCode;
