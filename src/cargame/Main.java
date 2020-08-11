@@ -4,6 +4,10 @@ import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import static cargame.EntityType.*;
 import static com.almasb.fxgl.dsl.FXGL.*;
+
+import com.almasb.fxgl.app.scene.FXGLMenu;
+import com.almasb.fxgl.app.scene.SceneFactory;
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.dsl.views.ScrollingBackgroundView;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
@@ -29,6 +33,15 @@ public class Main extends GameApplication {
         settings.setHeight(600);
         settings.setTitle("Untitled Car Game");
         settings.setVersion("0.0.1");
+        settings.setMainMenuEnabled(true);
+        settings.setSceneFactory(new SceneFactory(){
+
+            @Override
+            public FXGLMenu newMainMenu(){
+
+                return new MainMenu();
+            }
+        });
     }
 
     @Override
@@ -80,8 +93,7 @@ public class Main extends GameApplication {
     protected void initPhysics() {
         onCollisionBegin(CAR, MOOSE, (car, moose) -> {
             moose.removeFromWorld();
-            showMessage("You Died!");
-            set("score", 0);
+            gameOver();
         });
     }
 
@@ -92,6 +104,24 @@ public class Main extends GameApplication {
         scoreText.setTranslateY(100);
         scoreText.textProperty().bind(getip("score").asString("Score: [%d]"));
         addUINode(scoreText);
+    }
+
+    private void gameOver(){
+
+        showMessage("You Died!");
+        set("score", 0);
+        getDialogService().showInputBox("High Score, Enter your name.", (name) -> { ShowRetryPromptUI(); });
+    }
+
+    private void ShowRetryPromptUI(){
+
+        getDialogService().showConfirmationBox("Would you like to play again?", ( playAgain ) -> {
+            if( playAgain) {
+                FXGL.getGameController().startNewGame();
+            } else {
+                FXGL.getGameController().exit();
+            }
+        });
     }
 
     public static void main(String[] args) {
