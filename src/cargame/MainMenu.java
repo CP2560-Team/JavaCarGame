@@ -7,6 +7,7 @@ import javafx.beans.binding.StringBinding;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -17,7 +18,6 @@ public class MainMenu extends FXGLMenu {
     private Node mainScreen;
     private Node leaderboardScreen;
     private StackPane customizeScreen;
-    public int carSelection;
 
 
     public MainMenu(){
@@ -25,6 +25,8 @@ public class MainMenu extends FXGLMenu {
         super(MenuType.MAIN_MENU);
         mainScreen = CreateMainScreen();
         customizeScreen = CreateCustomizeScreen();
+        leaderboardScreen = CreateLeaderboardScreen();
+
         ShowMainMenu();
 
     }
@@ -52,6 +54,18 @@ public class MainMenu extends FXGLMenu {
 
     }
 
+    private void ShowLeaderboardScreen(){
+
+        getContentRoot().getChildren().remove(0);
+        ImageView bg = new ImageView("assets/textures/customizebackground.jpg");
+        bg.setFitHeight(600.0);
+        bg.setFitWidth(800.0);
+        getContentRoot().getChildren().add(0,bg);
+        getMenuContentRoot().getChildren().clear();
+        getMenuContentRoot().getChildren().addAll(leaderboardScreen);
+
+    }
+
     private Node CreateMainScreen(){
 
         VBox box = new VBox();
@@ -67,17 +81,43 @@ public class MainMenu extends FXGLMenu {
         box.getChildren().addAll(customizeButton);
         customizeButton.setOnAction((event) -> { ShowCustomizeScreen();});
 
+        MenuButton leaderboardButton = new MenuButton("Leaderboard");
+        box.getChildren().addAll(leaderboardButton);
+        customizeButton.setOnAction((event) -> { ShowLeaderboardScreen();});
+
         MenuButton exitGameButton = new MenuButton("Exit Game");
         box.getChildren().addAll(exitGameButton);
         exitGameButton.setOnAction( (event) -> FXGL.getGameController().exit());
 
         return box;
     }
-/*
+
    private Node CreateLeaderboardScreen(){
 
+        String textboxStyle = "-fx-background-color:#CC6600; -fx-font-size: 22";
 
-   }*/
+        VBox box = new VBox();
+        box.setAlignment(Pos.CENTER);
+        box.setPrefSize(800.0,600.0);
+        box.setSpacing(10.0);
+
+       TextField scoreOne = new TextField("score1");
+       TextField scoreTwo = new TextField("score2");
+       TextField scoreThree = new TextField("score3");
+       TextField scoreFour = new TextField("score4");
+       TextField scoreFive = new TextField("score5");
+
+       scoreOne.setStyle(textboxStyle);
+       scoreTwo.setStyle(textboxStyle);
+       scoreThree.setStyle(textboxStyle);
+       scoreFour.setStyle(textboxStyle);
+       scoreFive.setStyle(textboxStyle);
+
+       box.getChildren().addAll(scoreOne,scoreTwo,scoreThree,scoreFour,scoreFive);
+
+       return box;
+
+   }
 
     private StackPane CreateCustomizeScreen(){
 
