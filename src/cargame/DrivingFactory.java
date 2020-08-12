@@ -28,7 +28,7 @@ public class DrivingFactory implements EntityFactory {
         return entityBuilder()
                 .type(CAR)
                 .from(data)
-                .viewWithBBox(texture("car.png", 70, 140))
+                .viewWithBBox(texture(MainMenu.getSelectedCarAsset() , 70, 140))
                 .with(new CollidableComponent(true))
                 .with(new IrremovableComponent())
                 .build();

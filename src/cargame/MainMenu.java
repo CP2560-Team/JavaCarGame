@@ -18,6 +18,7 @@ public class MainMenu extends FXGLMenu {
     private Node mainScreen;
     private Node leaderboardScreen;
     private StackPane customizeScreen;
+    private String selectedCarAsset;
 
 
     public MainMenu(){
@@ -164,6 +165,7 @@ public class MainMenu extends FXGLMenu {
         carView.setFitHeight(200);
         carView.setFitWidth(150);
         customizeScreen.getChildren().add(carView);
+        selectedCarAsset("assets/textures/car.png");
     }
 
     private void SelectCarTwo(){
@@ -173,6 +175,7 @@ public class MainMenu extends FXGLMenu {
         carView.setFitHeight(200);
         carView.setFitWidth(150);
         customizeScreen.getChildren().add(carView);
+        selectedCarAsset("assets/textures/car1.png");
     }
 
     private void SelectCarThree(){
@@ -182,6 +185,23 @@ public class MainMenu extends FXGLMenu {
         carView.setFitHeight(200);
         carView.setFitWidth(150);
         customizeScreen.getChildren().add(carView);
+        selectedCarAsset("assets/textures/car3.png");
+    }
+
+    /**
+     * a setter method to select which car asset should be used in game
+     * @param carAsset, a string value to represent an asset file path
+     */
+    public void setSelectedCarAsset(String carAsset){
+        selectedCarAsset = carAsset;
+    }
+
+    /**
+     * a getter method to select which car asset should be used in game
+     * @return selectedCarAsset, a string value to represent an asset file path
+     */
+    public String getSelectedCarAsset(){
+        return selectedCarAsset;
     }
 
     @NotNull

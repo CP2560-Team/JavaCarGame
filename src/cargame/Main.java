@@ -203,8 +203,8 @@ public class Main extends GameApplication {
     //TODO: ADD check for leaderboard in this method?
     private void gameOverScreen(){
         showMessage("You Died!");
-        set("score", 0);
         getDialogService().showInputBox("High Score, Enter your name.", (name) -> { ShowRetryPromptUI(); });
+        set("score", 0);
     }
 
     /**
