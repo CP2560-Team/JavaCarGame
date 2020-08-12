@@ -62,10 +62,10 @@ public class DrivingFactory implements EntityFactory {
         return entityBuilder()
                 .from(data)
                 .type(POTHOLE)
-                .viewWithBBox(texture("moose.png", 40, 58)) //TODO ADD CORRECT ART
+                .viewWithBBox(texture("pothole.png", 40, 58)) 
                 .with(new CollidableComponent(true))
                 .with(new OffscreenCleanComponent())
-                .with(new LiftComponent().yAxisSpeedDuration(150, Duration.seconds(15)))
+                .with(new LiftComponent().yAxisSpeedDuration(150, Duration.seconds(10)))
                 .build();
     }
 
@@ -80,7 +80,7 @@ public class DrivingFactory implements EntityFactory {
         return entityBuilder()
                 .from(data)
                 .type(PYLON)
-                .viewWithBBox(texture("moose.png", 40, 58)) //TODO ADD CORRECT ART
+                .viewWithBBox(texture("pylon.png", 40, 58))
                 .with(new CollidableComponent(true))
                 .with(new OffscreenCleanComponent())
                 .with(new LiftComponent().yAxisSpeedDuration(150, Duration.seconds(15)))
@@ -98,7 +98,7 @@ public class DrivingFactory implements EntityFactory {
         return entityBuilder()
                 .from(data)
                 .type(WRENCH)
-                .viewWithBBox(texture("moose.png", 40, 58)) //TODO ADD CORRECT ART
+                .viewWithBBox(texture("wrench.png", 40, 58))
                 .with(new CollidableComponent(true))
                 .with(new OffscreenCleanComponent())
                 .with(new LiftComponent().yAxisSpeedDuration(150, Duration.seconds(15)))
