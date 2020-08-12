@@ -116,7 +116,7 @@ public class DrivingFactory implements EntityFactory {
         return entityBuilder()
                 .from(data)
                 .type(POINTSORB)
-                .viewWithBBox(texture("moose.png", 40, 58)) //TODO ADD CORRECT ART
+                .viewWithBBox(texture("pointorb.png", 40, 58)) 
                 .with(new CollidableComponent(true))
                 .with(new OffscreenCleanComponent())
                 .with(new LiftComponent().yAxisSpeedDuration(150, Duration.seconds(15)))
