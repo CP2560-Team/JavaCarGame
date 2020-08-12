@@ -65,7 +65,6 @@ public class DrivingFactory implements EntityFactory {
                 .viewWithBBox(texture("pothole.png", 40, 58))
                 .with(new CollidableComponent(true))
                 .with(new OffscreenCleanComponent())
-                .with(new LiftComponent().yAxisSpeedDuration(150, Duration.seconds(10)))
                 .build();
     }
 
@@ -83,7 +82,6 @@ public class DrivingFactory implements EntityFactory {
                 .viewWithBBox(texture("pylon.png", 40, 58))
                 .with(new CollidableComponent(true))
                 .with(new OffscreenCleanComponent())
-                .with(new LiftComponent().yAxisSpeedDuration(150, Duration.seconds(15)))
                 .build();
     }
 
