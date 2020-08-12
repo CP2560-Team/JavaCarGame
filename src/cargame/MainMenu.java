@@ -7,7 +7,6 @@ import javafx.beans.binding.StringBinding;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -18,7 +17,7 @@ public class MainMenu extends FXGLMenu {
     private Node mainScreen;
     private Node leaderboardScreen;
     private StackPane customizeScreen;
-    private String selectedCarAsset = "assets/textures/car.png";
+    private static String selectedCarAsset = "car.png";
 
 
     public MainMenu(){
@@ -26,7 +25,6 @@ public class MainMenu extends FXGLMenu {
         super(MenuType.MAIN_MENU);
         mainScreen = CreateMainScreen();
         customizeScreen = CreateCustomizeScreen();
-        leaderboardScreen = CreateLeaderboardScreen();
 
         ShowMainMenu();
 
@@ -35,7 +33,7 @@ public class MainMenu extends FXGLMenu {
     private void ShowMainMenu(){
 
         getContentRoot().getChildren().remove(0);
-        ImageView bg = new ImageView("assets/textures/main.PNG");
+        ImageView bg = new ImageView("assets/textures/main.png");
         bg.setFitHeight(600.0);
         bg.setFitWidth(800.0);
         getContentRoot().getChildren().add(0,bg);
@@ -82,48 +80,12 @@ public class MainMenu extends FXGLMenu {
         box.getChildren().addAll(customizeButton);
         customizeButton.setOnAction((event) -> { ShowCustomizeScreen();});
 
-        MenuButton leaderboardButton = new MenuButton("Leaderboard");
-        box.getChildren().addAll(leaderboardButton);
-        customizeButton.setOnAction((event) -> { ShowLeaderboardScreen();});
-
         MenuButton exitGameButton = new MenuButton("Exit Game");
         box.getChildren().addAll(exitGameButton);
         exitGameButton.setOnAction( (event) -> FXGL.getGameController().exit());
 
         return box;
     }
-
-   private Node CreateLeaderboardScreen(){
-
-        //load in high scores
-       LeaderBoard.loadData();
-
-        String textboxStyle = "-fx-background-color:#CC6600; -fx-font-size: 22";
-
-        VBox box = new VBox();
-        box.setAlignment(Pos.CENTER);
-        box.setPrefSize(800.0,600.0);
-        box.setSpacing(10.0);
-
-        //get and place scores
-       Label scoreOne = new Label("1ST:   " + LeaderBoard.getScore(0));
-       Label scoreTwo = new Label("2ND:   " + LeaderBoard.getScore(1));
-       Label scoreThree = new Label("3RD:   " + LeaderBoard.getScore(2));
-       Label scoreFour = new Label("4TH:   " + LeaderBoard.getScore(3));
-       Label scoreFive = new Label("5TH:   " + LeaderBoard.getScore(4));
-
-       //not sure if we need styling. switched textfields to labels
-       //scoreOne.setStyle(textboxStyle);
-       //scoreTwo.setStyle(textboxStyle);
-       //scoreThree.setStyle(textboxStyle);
-       //scoreFour.setStyle(textboxStyle);
-       //scoreFive.setStyle(textboxStyle);
-
-       box.getChildren().addAll(scoreOne,scoreTwo,scoreThree,scoreFour,scoreFive);
-
-       return box;
-
-   }
 
     private StackPane CreateCustomizeScreen(){
 
@@ -170,7 +132,7 @@ public class MainMenu extends FXGLMenu {
         carView.setFitHeight(200);
         carView.setFitWidth(150);
         customizeScreen.getChildren().add(carView);
-        selectedCarAsset("assets/textures/car.png");
+        selectedCarAsset = "car.png";
     }
 
     private void SelectCarTwo(){
@@ -180,7 +142,7 @@ public class MainMenu extends FXGLMenu {
         carView.setFitHeight(200);
         carView.setFitWidth(150);
         customizeScreen.getChildren().add(carView);
-        selectedCarAsset("assets/textures/car1.png");
+        selectedCarAsset = "car1.png";
     }
 
     private void SelectCarThree(){
@@ -190,7 +152,7 @@ public class MainMenu extends FXGLMenu {
         carView.setFitHeight(200);
         carView.setFitWidth(150);
         customizeScreen.getChildren().add(carView);
-        selectedCarAsset("assets/textures/car3.png");
+        selectedCarAsset = "car3.png";
     }
 
     /**
@@ -205,7 +167,7 @@ public class MainMenu extends FXGLMenu {
      * a getter method to select which car asset should be used in game
      * @return selectedCarAsset, a string value to represent an asset file path
      */
-    public String getSelectedCarAsset(){
+    public static String getSelectedCarAsset(){
         return selectedCarAsset;
     }
 

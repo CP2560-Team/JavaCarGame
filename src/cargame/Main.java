@@ -98,9 +98,9 @@ public class Main extends GameApplication {
         getGameTimer().runAtInterval(() -> spawn("moose", car.getRightX(), car.getBottomY() - 480) , Duration.seconds(3));
 
         //copying moose spawn code for other entities. durations and X/Y may need to be tweaked
-        getGameTimer().runAtInterval(() -> spawn("pothole", car.getRightX(), car.getBottomY() - 480) , Duration.seconds(8));
-        getGameTimer().runAtInterval(() -> spawn("pylon", car.getRightX(), car.getBottomY() - 480) , Duration.seconds(6));
-        getGameTimer().runAtInterval(() -> spawn("wrench", car.getRightX(), car.getBottomY() - 480) , Duration.seconds(40));
+        getGameTimer().runAtInterval(() -> spawn("potHole", getSpawnLocation(), car.getBottomY() - 480) , Duration.seconds(8));
+        getGameTimer().runAtInterval(() -> spawn("pylon", getSpawnLocation(), car.getBottomY() - 480) , Duration.seconds(6));
+        getGameTimer().runAtInterval(() -> spawn("wrench", getSpawnLocation(), car.getBottomY() - 480) , Duration.seconds(40));
         getGameTimer().runAtInterval(() -> spawn("pointsorb", car.getRightX(), car.getBottomY() - 480) , Duration.seconds(10));
     }
 
@@ -150,7 +150,7 @@ public class Main extends GameApplication {
         //car collides with pointsorb. add 1000 points
         onCollisionBegin(CAR, POINTSORB, (car, pointsorb) -> {
             pointsorb.removeFromWorld();
-            updateScore(1000);
+            inc("score",1000);
         });
     }
 
@@ -162,17 +162,17 @@ public class Main extends GameApplication {
     protected void updateHealth(int newValue){
         if(newValue==1){
             //cap health at 3, give player points if they collect wrench at full health
-            if(vars.getValue("health")==3){
-                inc("score", +10000)
+            if(geti("health")==3){
+                inc("score", +10000);
             }else{
-                inc("health", +1)
+                inc("health", +1);
             }
         }else if(newValue==-1){
-            inc("health", -1)
+            inc("health", -1);
         }
 
         //if health is less than one call gameOverScreen
-        if(vars.getValue("health") < 1){
+        if(geti("health") < 1){
             gameOverScreen();
         }
     }
@@ -188,7 +188,7 @@ public class Main extends GameApplication {
         scoreText.textProperty().bind(getip("score").asString("Score: [%d]"));
         addUINode(scoreText);
 
-        //copying code for health. TODO: adjust x and y coordinates
+        //copying code for health.
         Text healthText = getUIFactoryService().newText("", Color.BLACK, 24);
         healthText.setTranslateX(600);
         healthText.setTranslateY(80);
@@ -200,23 +200,18 @@ public class Main extends GameApplication {
      * a method that handles a call to the game over screen and high score prompt
      * if the player's score should be entered into the high score list.
      */
-    //TODO: ADD check for leaderboard in this method?
     private void gameOverScreen(){
 
-        //get final score for new high score check
-        int playerFinalScore = vars.getValue("score");
+        //show retry prompt with point info.
+        ShowRetryPromptUI();
+    }
 
-        //show game over
-        showMessage("You Died!");
-
-        //check for new high score prompt or just retry prompt
-        if(LeaderBoard.checkForNewHighScore()){
-            //getDialogService().showInputBox("High Score, Enter your name.", (name) -> { ShowRetryPromptUI(); });
-            showMessage("New High Score!")
-            ShowRetryPromptUI();
-        }else{
-            ShowRetryPromptUI();
-        }
+    /**
+     * Method to get a random value on the x axis for spawning entities.
+     * @return
+     */
+    public static int getSpawnLocation(){
+        return ((int) (Math.random()*(400 - 200))) + 200;
     }
 
     /**
@@ -224,15 +219,12 @@ public class Main extends GameApplication {
      */
     private void ShowRetryPromptUI(){
 
-        getDialogService().showConfirmationBox("Would you like to play again?", ( playAgain ) -> {
+        getDialogService().showConfirmationBox("Game Over! Would you like to play again? \n Final Score: " + geti("score"), ( playAgain ) -> {
             if( playAgain) {
                 //reset score and start new game
                 set("score", 0);
                 FXGL.getGameController().startNewGame();
             } else {
-                //set high scores to be saved and exit the game
-                LeaderBoard.setValues();
-                LeaderBoard.saveData();
                 FXGL.getGameController().exit();
             }
         });
