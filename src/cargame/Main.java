@@ -1,5 +1,6 @@
 package cargame;
 
+
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import static cargame.EntityType.*;
@@ -22,17 +23,23 @@ import javafx.util.Duration;
 
 import java.util.Map;
 
+/**
+ * the main class for the game. Handles game construction and initialization.
+ */
 public class Main extends GameApplication {
 
     private Entity car;
 
-
+    /**
+     * a method to initialize game settings, including window size and main menu.
+     * @param settings
+     */
     @Override
     protected void initSettings(GameSettings settings) {
         settings.setWidth(800);
         settings.setHeight(600);
-        settings.setTitle("Untitled Car Game");
-        settings.setVersion("0.0.1");
+        settings.setTitle("Trans-Canada Caper: Driving NL");
+        settings.setVersion("0.1.1");
         settings.setMainMenuEnabled(true);
         settings.setSceneFactory(new SceneFactory(){
 
@@ -44,6 +51,9 @@ public class Main extends GameApplication {
         });
     }
 
+    /**
+     * a method to bind keyboard input to in-game actions
+     */
     @Override
     protected void initInput() {
         getInput().addAction(new UserAction("Forward") {
@@ -59,11 +69,19 @@ public class Main extends GameApplication {
         onBtnDown(MouseButton.PRIMARY, () -> spawn("moose", car.getRightX(), car.getBottomY() - 500));
     }
 
+    /**
+     * a method to initialize the score and health values.
+     * @param vars
+     */
     @Override
     protected void initGameVars(Map<String, Object> vars) {
         vars.put("score", 0);
+        vars.put("health", 3); //adding health to car
     }
 
+    /**
+     * a method to initialize the main game screen, including background, player, and obstacles.
+     */
     @Override
     protected void initGame() {
         getGameWorld().addEntityFactory(new DrivingFactory());
@@ -79,24 +97,89 @@ public class Main extends GameApplication {
         getGameScene().getViewport().bindToEntity(car, getAppWidth() / 3, getAppHeight() / 2);
         getGameTimer().runAtInterval(() -> spawn("moose", car.getRightX(), car.getBottomY() - 480) , Duration.seconds(3));
 
+        //copying moose spawn code for other entities. durations and X/Y may need to be tweaked
+        getGameTimer().runAtInterval(() -> spawn("pothole", car.getRightX(), car.getBottomY() - 480) , Duration.seconds(8));
+        getGameTimer().runAtInterval(() -> spawn("pylon", car.getRightX(), car.getBottomY() - 480) , Duration.seconds(6));
+        getGameTimer().runAtInterval(() -> spawn("wrench", car.getRightX(), car.getBottomY() - 480) , Duration.seconds(40));
+        getGameTimer().runAtInterval(() -> spawn("pointsorb", car.getRightX(), car.getBottomY() - 480) , Duration.seconds(10));
     }
 
+    /**
+     * a method to initialize the player's car at certain X and Y values.
+     */
     private void initCar() {
         car = spawn("car", 300, getAppHeight() - 300);
     }
 
+    /**
+     * a method to initialize the the outer bounds of the play area during the game
+     */
     private void initScreenBounds() {
         entityBuilder().buildScreenBoundsAndAttach(100);
     }
 
+    /**
+     * a method to handle in game collisions between the player's car and other objects
+     */
     @Override
     protected void initPhysics() {
+        //car collides with moose. call Game over immediately
         onCollisionBegin(CAR, MOOSE, (car, moose) -> {
             moose.removeFromWorld();
-            gameOver();
+            gameOverScreen();
+        });
+
+        //car collides with pothole. remove 1 health
+        onCollisionBegin(CAR, POTHOLE, (car, pothole) -> {
+            pothole.removeFromWorld();
+            updateHealth(-1);
+        });
+
+        //car collides with pylon. remove 1 health
+        onCollisionBegin(CAR, PYLON, (car, pylon) -> {
+            pylon.removeFromWorld();
+            updateHealth(-1);
+        });
+
+        //car collides with wrench. add 1 health
+        onCollisionBegin(CAR, WRENCH, (car, wrench) -> {
+            wrench.removeFromWorld();
+            updateHealth(1);
+        });
+
+        //car collides with pointsorb. add 1000 points
+        onCollisionBegin(CAR, POINTSORB, (car, pointsorb) -> {
+            pointsorb.removeFromWorld();
+            updateScore(1000);
         });
     }
 
+    /**
+     * a method to update the health value for the player
+     * @param newValue
+     */
+    //function to update health value
+    protected void updateHealth(int newValue){
+        if(newValue==1){
+            //cap health at 3, give player points if they collect wrench at full health
+            if(vars.getValue("health")==3){
+                inc("score", +10000)
+            }else{
+                inc("health", +1)
+            }
+        }else if(newValue==-1){
+            inc("health", -1)
+        }
+
+        //if health is less than one call gameOverScreen
+        if(vars.getValue("health") < 1){
+            gameOverScreen();
+        }
+    }
+
+    /**
+     * a method to initialize the score and health UI for in-game display to the player.
+     */
     @Override
     protected void initUI() {
         Text scoreText = getUIFactoryService().newText("", Color.BLACK, 24);
@@ -104,26 +187,61 @@ public class Main extends GameApplication {
         scoreText.setTranslateY(100);
         scoreText.textProperty().bind(getip("score").asString("Score: [%d]"));
         addUINode(scoreText);
+
+        //copying code for health. TODO: adjust x and y coordinates
+        Text healthText = getUIFactoryService().newText("", Color.BLACK, 24);
+        healthText.setTranslateX(600);
+        healthText.setTranslateY(80);
+        healthText.textProperty().bind(getip("health").asString("Health: [%d]"));
+        addUINode(healthText);
     }
 
-    private void gameOver(){
+    /**
+     * a method that handles a call to the game over screen and high score prompt
+     * if the player's score should be entered into the high score list.
+     */
+    //TODO: ADD check for leaderboard in this method?
+    private void gameOverScreen(){
 
+        //get final score for new high score check
+        int playerFinalScore = vars.getValue("score");
+
+        //show game over
         showMessage("You Died!");
-        set("score", 0);
-        getDialogService().showInputBox("High Score, Enter your name.", (name) -> { ShowRetryPromptUI(); });
+
+        //check for new high score prompt or just retry prompt
+        if(LeaderBoard.checkForNewHighScore()){
+            //getDialogService().showInputBox("High Score, Enter your name.", (name) -> { ShowRetryPromptUI(); });
+            showMessage("New High Score!")
+            ShowRetryPromptUI();
+        }else{
+            ShowRetryPromptUI();
+        }
     }
 
+    /**
+     * a method to allow the player to play again or quit the game
+     */
     private void ShowRetryPromptUI(){
 
         getDialogService().showConfirmationBox("Would you like to play again?", ( playAgain ) -> {
             if( playAgain) {
+                //reset score and start new game
+                set("score", 0);
                 FXGL.getGameController().startNewGame();
             } else {
+                //set high scores to be saved and exit the game
+                LeaderBoard.setValues();
+                LeaderBoard.saveData();
                 FXGL.getGameController().exit();
             }
         });
     }
 
+    /**
+     * main method call to launch the game.
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }
