@@ -33,6 +33,7 @@ public class LeaderBoard {
         scores.add(properties.getProperty("HighScore3"));
         scores.add(properties.getProperty("HighScore4"));
         scores.add(properties.getProperty("HighScore5"));
+
     }
 
     /**
@@ -52,11 +53,21 @@ public class LeaderBoard {
      * a method to update the high score list
      */
     public void setValues(){
+        //set scores
         properties.setProperty("HighScore1", scores.get(0));
         properties.setProperty("HighScore2", scores.get(1));
         properties.setProperty("HighScore3", scores.get(2));
         properties.setProperty("HighScore4", scores.get(3));
         properties.setProperty("HighScore5", scores.get(4));
+    }
+
+    /**
+     * a method to get a value from the high score list
+     * @param index the index of the score to access
+     * @return the value at the given index
+     */
+    public String getScore(int index){
+        scores.get(index);
     }
 
     /**

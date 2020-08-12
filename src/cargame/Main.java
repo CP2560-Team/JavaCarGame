@@ -202,9 +202,21 @@ public class Main extends GameApplication {
      */
     //TODO: ADD check for leaderboard in this method?
     private void gameOverScreen(){
+
+        //get final score for new high score check
+        int playerFinalScore = vars.getValue("score");
+
+        //show game over
         showMessage("You Died!");
-        getDialogService().showInputBox("High Score, Enter your name.", (name) -> { ShowRetryPromptUI(); });
-        set("score", 0);
+
+        //check for new high score prompt or just retry prompt
+        if(LeaderBoard.checkForNewHighScore()){
+            //getDialogService().showInputBox("High Score, Enter your name.", (name) -> { ShowRetryPromptUI(); });
+            showMessage("New High Score!")
+            ShowRetryPromptUI();
+        }else{
+            ShowRetryPromptUI();
+        }
     }
 
     /**
@@ -214,8 +226,13 @@ public class Main extends GameApplication {
 
         getDialogService().showConfirmationBox("Would you like to play again?", ( playAgain ) -> {
             if( playAgain) {
+                //reset score and start new game
+                set("score", 0);
                 FXGL.getGameController().startNewGame();
             } else {
+                //set high scores to be saved and exit the game
+                LeaderBoard.setValues();
+                LeaderBoard.saveData();
                 FXGL.getGameController().exit();
             }
         });

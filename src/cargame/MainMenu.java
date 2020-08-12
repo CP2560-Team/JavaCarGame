@@ -18,7 +18,7 @@ public class MainMenu extends FXGLMenu {
     private Node mainScreen;
     private Node leaderboardScreen;
     private StackPane customizeScreen;
-    private String selectedCarAsset;
+    private String selectedCarAsset = "assets/textures/car.png";
 
 
     public MainMenu(){
@@ -95,6 +95,9 @@ public class MainMenu extends FXGLMenu {
 
    private Node CreateLeaderboardScreen(){
 
+        //load in high scores
+       LeaderBoard.loadData();
+
         String textboxStyle = "-fx-background-color:#CC6600; -fx-font-size: 22";
 
         VBox box = new VBox();
@@ -102,17 +105,19 @@ public class MainMenu extends FXGLMenu {
         box.setPrefSize(800.0,600.0);
         box.setSpacing(10.0);
 
-       TextField scoreOne = new TextField("score1");
-       TextField scoreTwo = new TextField("score2");
-       TextField scoreThree = new TextField("score3");
-       TextField scoreFour = new TextField("score4");
-       TextField scoreFive = new TextField("score5");
+        //get and place scores
+       Label scoreOne = new Label("1ST:   " + LeaderBoard.getScore(0));
+       Label scoreTwo = new Label("2ND:   " + LeaderBoard.getScore(1));
+       Label scoreThree = new Label("3RD:   " + LeaderBoard.getScore(2));
+       Label scoreFour = new Label("4TH:   " + LeaderBoard.getScore(3));
+       Label scoreFive = new Label("5TH:   " + LeaderBoard.getScore(4));
 
-       scoreOne.setStyle(textboxStyle);
-       scoreTwo.setStyle(textboxStyle);
-       scoreThree.setStyle(textboxStyle);
-       scoreFour.setStyle(textboxStyle);
-       scoreFive.setStyle(textboxStyle);
+       //not sure if we need styling. switched textfields to labels
+       //scoreOne.setStyle(textboxStyle);
+       //scoreTwo.setStyle(textboxStyle);
+       //scoreThree.setStyle(textboxStyle);
+       //scoreFour.setStyle(textboxStyle);
+       //scoreFive.setStyle(textboxStyle);
 
        box.getChildren().addAll(scoreOne,scoreTwo,scoreThree,scoreFour,scoreFive);
 
